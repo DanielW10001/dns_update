@@ -1,0 +1,19 @@
+<service>
+    <id>dns_update</id>
+    <name>dns_update</name>
+    <description>Periodically Update DDNS to Local Public IP</description>
+    <executable>VENV/python.exe</executable>
+
+    <onfailure action="restart" delay="10 min"/>
+    <onfailure action="restart" delay="30 min"/>
+    <onfailure action="restart" delay="1 hour"/>
+    <resetfailure>3 hour</resetfailure>
+
+    <arguments>%BASE%/dns_update.py HOST DOMAIN PASSWORD PROXY</arguments>
+
+    <startmode>Automatic</startmode>
+    <delayedAutoStart/>
+
+    <logpath>%BASE%/log</logpath>
+    <log mode="roll"/>
+</service>

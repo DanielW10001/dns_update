@@ -1,0 +1,10 @@
+[tool.poetry]
+name = "dns_update"
+version = "0.1.0"
+description = "Periodically Update DDNS to Local Public IP"
+authors = ["Daniel <danielw10001@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+pysocks = "^1.7.1"
+requests = "^2.23.0"
