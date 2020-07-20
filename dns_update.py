@@ -22,6 +22,7 @@ class APIError(RuntimeError):
     pass
 
 
+last_ip = ''
 while True:
     # Get local pulic IP
     while True:
@@ -40,19 +41,23 @@ while True:
         else:
             break
 
-    while True:
-        err_count = 0
-        try:
-            response = requests.get(f'https://dynamicdns.park-your-domain.com/update?host={args.host}&domain={args.domain}&password={args.password}&ip={ip}', proxies={'https': args.proxy}, timeout=10)
-            response.raise_for_status()
-            if not re.search(r'\<ErrCount\>0\<\/ErrCount\>.*\<Done\>true\<\/Done\>', response.text):
-                raise APIError(f'DDNS Response: {response.text}')
-        except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError, requests.exceptions.Timeout, APIError):
-            if err_count > 5:
-                raise
+    # Update IP
+    if ip != last_ip:
+        while True:
+            err_count = 0
+            try:
+                response = requests.get(f'https://dynamicdns.park-your-domain.com/update?host={args.host}&domain={args.domain}&password={args.password}&ip={ip}', proxies={'https': args.proxy}, timeout=10)
+                response.raise_for_status()
+                if not re.search(r'\<ErrCount\>0\<\/ErrCount\>.*\<Done\>true\<\/Done\>', response.text):
+                    raise APIError(f'DDNS Response: {response.text}')
+            except (requests.exceptions.ConnectionError, requests.exceptions.HTTPError, requests.exceptions.Timeout, APIError):
+                if err_count > 5:
+                    raise
+                else:
+                    err_count += 1
             else:
-                err_count += 1
-        else:
-            break
-
-    time.sleep(30)
+                last_ip = ip
+                break
+        time.sleep(30)
+    else:
+        time.sleep(15*60)
