@@ -12,7 +12,6 @@
     <arguments>%BASE%/dns_update.py HOST DOMAIN PASSWORD PROXY</arguments>
 
     <startmode>Automatic</startmode>
-    <delayedAutoStart/>
 
     <logpath>%BASE%/log</logpath>
     <log mode="roll"/>
